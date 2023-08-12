@@ -1,31 +1,34 @@
 import pickle
 import os
-import re
-from mytorch import nn
-from mytorch.engine import Value
 from digitdraw import Window
+from neural_network import NeuralNetwork
+import torch
 
-# Get the first generated model
-MODEL_PATH = f"{os.getcwd()}/digit-guesser-model.pkl"
+model_file_name = input("Enter the model file name: ")
 
-model = nn.MLP(100, [33, 33, 10])
-model.load_model(MODEL_PATH)
+if not os.path.isfile(model_file_name):
+    print(f"Could not find a model file named {model_file_name}")
+    exit()
+
+model = NeuralNetwork(False)
+model.load_state_dict(torch.load(model_file_name))
 
 window = Window()
 
 def evaluation_action(grid_data):
-    outputs = model(grid_data)
-    
-    # Search for highest probability output
-    highest_i = 0
-    highest_p = 0
-    for i in range(len(outputs)):
-        print(i, outputs[i])
-        if outputs[i].data > highest_p:
-            highest_i = i
-            highest_p = outputs[i].data
+    x = normalize_grid_data(grid_data)
 
-    window.set_prediction_label(highest_i) 
+    model.eval()
+    with torch.no_grad():
+        output = model(x)
+
+        window.set_prediction_label(output.argmax()) 
+
+
+def normalize_grid_data(grid_data):
+    t = torch.tensor(grid_data, dtype=torch.float)
+    mean, std = torch.mean(t), torch.std(t)
+    return (t - mean) / std
 
 # Set the action to call when the "Guess digit"
 # button is pressed.

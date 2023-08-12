@@ -5,9 +5,9 @@ from torch import nn
 from neural_network import NeuralNetwork
 
 # Hyperparameters
-learning_rate = 0.001
+learning_rate = 0.01
 batch_size = 64
-epochs = 10
+epochs = 20
 
 def train_loop(dataloader, model, loss_fn, optimizer):
     size = len(dataloader.dataset)
@@ -44,7 +44,7 @@ def test_loop(dataloader, model, loss_fn):
 
 if __name__ == "__main__":
     # Define model
-    model = NeuralNetwork()
+    model = NeuralNetwork(True)
 
     load_existing_model = input("Would you like to load an existing model? (Y/n): ")
     if load_existing_model.upper() == 'Y':

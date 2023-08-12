@@ -1,9 +1,10 @@
+import torch
 from torch import nn
 
 class NeuralNetwork(nn.Module):
-    def __init__(self):
+    def __init__(self, needs_flattened):
         super().__init__()
-        self.flatten = nn.Flatten()
+        self.needs_flattened = needs_flattened
         self.model = nn.Sequential(
             nn.Linear(28*28, 128),
             nn.ReLU(),
@@ -13,7 +14,9 @@ class NeuralNetwork(nn.Module):
         )
 
     def forward(self, x):
-        x = self.flatten(x)
+        if self.needs_flattened:
+            x = torch.flatten(x, start_dim=1)
+
         logits = self.model(x)
         return logits
 

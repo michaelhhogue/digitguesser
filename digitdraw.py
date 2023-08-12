@@ -1,12 +1,12 @@
 import tkinter as tk
-from mytorch.engine import Value
+import torch
 
 class Window:
 
     def __init__(self, training_mode=False):
         # Grid parameters
-        self._GRID_SIZE = 10   # The number of squares in the grid (in both dimensions)
-        self._SQUARE_SIZE = 50  # The size of each square in the grid (in pixels)
+        self._GRID_SIZE = 28   # The number of squares in the grid (in both dimensions)
+        self._SQUARE_SIZE = 10  # The size of each square in the grid (in pixels)
 
         # Initialize the grid data
         self._grid_data = [0 for _ in range(self._GRID_SIZE * self._GRID_SIZE)]
